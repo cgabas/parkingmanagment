@@ -7,13 +7,18 @@
 -- please run this without actually trying to create a new database for your self
 -- this code will create a new, reliable and appropriate database for you
 
--- CREATE DATABASE
-CREATE DATABASE parkdb;
+-- create DB
+CREATE DATABASE parkDB;
 
--- SWITCH DATABASE
-USE parkdb;
+-- TABLE FRAME
 
--- I. user table
+-- LIST OF TABLES TO BE CREATE
+-- I.   user
+-- II.  registered_car
+-- III. recorded_parking
+
+
+-- I.   user table
 CREATE TABLE user (
     userID VARCHAR(12) NOT NULL PRIMARY KEY,
     fullname VARCHAR(128) NOT NULL,
@@ -25,29 +30,33 @@ CREATE TABLE user (
     email VARCHAR(64) COMMENT "OPTIONAL"
 );
 
--- II. registered_car table
+-- II.  registered_car
 CREATE TABLE registered_car (
     regisNum VARCHAR(16) NOT NULL PRIMARY KEY,
     userID VARCHAR(12) NOT NULL,
     vehicleType VARCHAR(16) NOT NULL COMMENT "MUST ALL CAPITAL",
     vehicleBrand VARCHAR(16) NOT NULL,
-    vehicleModel VARCHAR(64) NOT NULL,
-    engineHP INT UNSIGNED NOT NULL,
-    isSuspended BOOL NOT NULL,
-    CONSTRAINT FK_userID FOREIGN KEY (userID) REFERENCES user(userID)
+    vehicleModel VARCAHR(64) NOT NULL,
+    engineHP UNSIGNED INT NOT NULL,
+    isSuspended BOOL NOT NULL
 );
 
--- III. recorded_parking table
+-- user -> registered_car 1:M
+ALTER TABLE registered_car ADD CONSTRAINT FK_userID FOREIGN KEY (userID) REFERENCES user(userID);
+
+-- III. recorded_parking
 CREATE TABLE recorded_parking (
     couponID VARCHAR(16) NOT NULL PRIMARY KEY,
     regisNum VARCHAR(16) NOT NULL,
     time_start TIME NOT NULL,
     time_end TIME NOT NULL,
-    issued_date DATE NOT NULL,
-    CONSTRAINT FK_regisNum FOREIGN KEY (regisNum) REFERENCES registered_car(regisNum)  -- Corrected Foreign Key Reference
+    issued_date DATE NOT NULL
 );
 
--- Value Insertion Test
+-- registered_car -> recorded_parking M:N
+ALTER TABLE recorded_parking ADD CONSTRAINT FK_regisNum FOREIGN KEY (regisNum) REFERENCES user(userID);
+
+-- Value Insertion Test!!!
 
 -- user
 INSERT INTO user (
@@ -82,7 +91,7 @@ INSERT INTO registered_car (
 ) VALUES (
     "ABC1234",
     "123456789012",
-    "SEDAN",
+    "Sedan",
     "Audi",
     "RS7",
     621,

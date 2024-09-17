@@ -1,0 +1,218 @@
+:root {
+    --color1: rgba(235, 219, 76, 1);
+    --color2: #1a73e8;
+
+    /* dark colour */
+    --d1: #222831;
+    --d2: #31363F;
+    --d3: #76ABAE;
+    --d4: #EEEEEE;
+}
+
+/* import fonts */
+@font-face {
+    font-family: martian;
+    src: url("../sources/font/Martian_Mono/MartianMono-VariableFont_wdth\,wght.ttf");
+}
+@font-face {
+    font-family: noto;
+    src: url("../sources/font/Noto_Sans/NotoSans-VariableFont_wdth\,wght.ttf");
+}
+@font-face {
+    font-family: roboto;
+    src: url("../sources/font/Roboto_Slab/RobotoSlab-VariableFont_wght.ttf");
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+}
+
+/* background image */
+.background {
+    width: 100%;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
+}
+.background img {
+    height: fit-content;
+    width: 100vw;
+    transform: scale(1.05);
+    position: fixed;
+    z-index: -1;
+    right: 0;
+    top: 0;
+    filter: blur(8px) brightness(0.5);
+    animation-name: blurFade;
+    animation-duration: 4.5s;
+    animation-timing-function: ease;
+}
+@keyframes blurFade {
+    0% {filter: blur(0px) brightness(1);}
+    30% {filter: blur(0px) brightness(1);}
+    100% {filter: blur(8px) brightness(0.5);}
+}
+
+/* form area */
+.formArea {
+    z-index: 1;
+    background-color: var(--d1);
+    margin: 0;
+    border-radius: 10px;
+    padding: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: brightness(1);
+    height: fit-content;
+    width: 50%;
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    animation-name: pop-out;
+    animation-duration: 3.5s;
+    animation-timing-function: ease;
+    z-index: 0;
+}
+.formArea h1 {
+    color: white;
+    font-family: martian;
+    text-align: center;
+    animation-name: color-fade-text;
+    animation-duration: 4s;
+    animation-timing-function: ease;
+}
+.formArea h3 {
+    color: white;
+    font-family: roboto;
+    text-align: center;
+    animation-name: color-fade-text;
+    animation-duration: 4s;
+    animation-timing-function: ease;
+}
+.formArea form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.formArea form button {
+    background-color: var(--d1);
+    color: var(--color2);
+    font-family: noto;
+    font-size: 1rem;
+    padding: 10px 25px 10px 25px;
+    border: 2px solid var(--color2);
+    text-align: center;
+    border-radius: 25px;
+    box-shadow: none;
+    outline: none;
+    cursor: pointer;
+    animation-name: pop-out;
+    animation-duration: 4.5s;
+    animation-timing-function: ease;
+    transition: 0.5s;
+}
+.formArea form button:hover {
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    background-color: #333b47;
+}
+
+.inputWrap {
+    width: 100%; /* Make it responsive */
+    max-width: 320px; /* Similar width to Google's login */
+    position: relative;
+    margin-bottom: 20px; /* Space for the label transition */
+}
+
+.inputWrap label {
+    color: #1a73e865;
+    font-family: Noto, sans-serif;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.2s ease;
+    pointer-events: none;
+    font-size: 1rem;
+}
+
+.inputWrap input {
+    width: 100%;
+    color: white;
+    padding: 10px;
+    padding-top: 20px; /* Extra padding to avoid overlap with label */
+    padding-left: 0;
+    text-align: center;
+    border-radius: 4px;
+    border: 2px solid var(--color2); /* Light border for the input */
+    font-size: 1.3rem;
+    outline: none;
+    background-color: var(--d1);
+    box-shadow: none; /* Remove inset shadows */
+    animation-name: pop-out;
+    animation-timing-function: ease;
+    animation-duration: 4.5s;
+}
+
+.inputWrap input:focus {
+    border-color: var(--color2); /* Google's blue border color on focus */
+}
+
+.inputWrap input:focus ~ label,
+.inputWrap input:not(:placeholder-shown) ~ label {
+    transform: translateY(-210%);
+    font-size: 0.8rem; /* Shrinks label size */
+    color: var(--color2); /* Color similar to Google's focus color */
+    background-color: var(--d1);
+    padding: 0 3px; /* Space around the label to prevent overlap with input border */
+}
+
+@keyframes pop-out {
+    0% {
+        background-color: #22283100;
+        border: none;
+        filter: brightness(0);
+        color: rgba(0, 0, 0, 0.0);
+        box-shadow: none;
+        z-index: 3;
+    }
+    50% {
+        background-color: #22283100;
+        border: none;
+        filter: brightness(0);
+        color: rgba(0, 0, 0, 0.0);
+        box-shadow: none;
+        z-index: 3;
+    }
+    100% {
+        z-index: 0;
+        background-color: var(--d1);
+        filter: brightness(1);
+        box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    }
+}
+@keyframes color-fade-text {
+    0% {
+        color: rgba(255, 255, 255, 0.0);
+    }
+    50% {
+        color: rgba(255, 255, 255, 0.0);
+    }
+    100% {
+        color: white;
+    }
+}
+
+/* id(s) */
+#errMsg {
+    text-align: center;
+    color: orange;
+    font-family: roboto;
+}
+
+#formLink {
+    text-align: center;
+    color: #1a73e8;
+    font-family: sans-serif;
+}
