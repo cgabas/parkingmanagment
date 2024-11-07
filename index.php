@@ -8,19 +8,37 @@
         $input = CGparking::formInput(CGconfig::getConnect(), $_POST['noic'], $_POST['passcode'], $_POST['regis']);
 
         // check if login process is success
-        if($session_D = CGparking::processForm(CGconfig::getConnect(), $input, 'LOGIN')) {
+        $session_D = CGparking::processForm(CGconfig::getConnect(), $input, 'LOGIN');
+        if(is_array($session_D) && isset($session_D)) {
             // set session and direct user to dashboard_PSM.php
             foreach($session_D as $name => $val) {
                 CGparking::sessionManagment('SET', [$name, $val]);
             }
+
+            // set cookie to flag user is successfuly logged in
+            setcookie("userLogged", true);
+
+            // userID is usefull during checkUserCar.php process
             header("Location: dashboard_PMS.php");
             // echo "<script>window.location = 'dashboard_PMS.php';</script>";
+        }
+        elseif(is_int($session_D) && $session_D === 2) {
+            echo "<script>
+            alert('The entered car registration number doesn\'t exist under the user data');
+            window.location = 'index.php';
+            </script>";
+        }
+        elseif(is_int($session_D) && $session_D === 2) {
+            echo "<script>
+            alert('The given identity number doesn\'t exist in our record');
+            window.location = 'index.php';
+            </script>";
         }
         else {
             // return back to login page
             echo "<script>
-                document.getElementById('errMsg').innerHTML = 'Sila Semak Semula Maklumat Anda!';
-                window.location = 'index.php';
+            alert('There is something wrong with the data given during process, please stay calm and try again.');
+            window.location = 'index.php';
             </script>";
         }
     }
@@ -28,6 +46,7 @@
 
 <!-- frontend -->
 <!DOCTYPE html>
+<script type="module" src="importMe.js"></script>
 <html lang="en">
     <?php include_once "library/head.php";?>
     <body>
@@ -55,7 +74,7 @@
                 <button type="submit" name="login">Login</button>
             </form>
             <!-- end form -->
-            <center><a href="register.php" id="formLink">New user? Register now</a></center>
+            <center><a id="formLink" onclick="CGobj.gotoRegis();">New user? Register now</a></center>
         </div>
     </body>
 </html>

@@ -1,34 +1,93 @@
+@import url("import-font.css");
+
 :root {
-    --gradientBG: radial-gradient(circle, rgba(0,0,0,0.3702614834996498) 0%, rgba(148,187,233,0) 42%);
+    --while: rgba(255, 255, 255, 1.0);
+    --trans: rgba(1, 1, 1, 0);
+    --gradientBG: radial-gradient(circle, rgba(0, 0, 0, 0.37) 0%, rgba(148, 187, 233, 0) 42%);
+}
 
-}
-@font-face {
-    font-family: raleway;
-    src: url("../sources/font/Raleway/static/Raleway-Regular.ttf");
-}
-nav {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: row;
-    height: 9rem;
-}
-nav img {
-    height: 9rem;
-    margin-right: 10px;
-}
-nav button {
-    width: 100%;
-    height: 100%;
+@media screen and (max-width: 720px) {
+    .navg {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: var(--while);
+        position: fixed;
+        margin-top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 0;
+        width: 100%;
+        height: 85px;
+    }
+    
+    .navg img {
+        height: 5rem;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .nav-but {
+        width: 100%;
+        height: 100%;
+        padding-top: 25px;
+        padding-bottom: 25px;
+        text-align: center;
+        font-size: 0.7rem;
+        background-color: black;
+        color: white;
+        border: none;
+        font-family: 'Raleway', sans-serif;  /* Fixed font-family spelling */
+        transition: 0.2s;
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .nav-but img {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        margin-right: 8px;  /* Added spacing between icon and text */
+    }
 
-    background-color: rgba(0, 0, 0, 0.0);
-    text-align: center;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    font-family: raleway;
-    transition: .2s;
+    .nav-but:active {
+        background-color: var(--trans);
+        border: 1px solid white;
+        color: black;
+    }
 }
-nav button:hover {
-    border-bottom: solid 1px black;
+
+@media screen and (min-width: 721px) {
+    nav {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: row;
+        height: 9rem;
+        background-color: var(--while);
+    
+        position: sticky;
+        top: 10px;
+    }
+    nav img {
+        height: 9rem;
+        margin-right: 10px;
+    }
+    .nav-but {
+        width: 100%;
+        height: 100%;
+    
+        background-color: var(--while);
+        text-align: center;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-family: raleway;
+        transition: .2s;
+    }
+    .nav-but:hover {
+        border-bottom: solid 1px black;
+    }    
 }

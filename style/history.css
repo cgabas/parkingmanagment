@@ -1,0 +1,71 @@
+@import url("import-font.css");
+
+:root {
+    --white: rgba(255, 255, 255, 1.0);
+    --black: rgba(1, 1, 1, 1);
+    --trans: rgba(1, 1, 1, 0);
+    --gold: rgba(217, 232, 75, 0.711);
+    --gradientBG: radial-gradient(circle, rgba(0, 0, 0, 0.37) 0%, rgba(148, 187, 233, 0) 42%);
+}
+
+@media screen and (max-width: 720px) {
+    body {
+        background-color: black;
+    }   
+
+    h1 {
+        font-family: martian;
+        color: white;
+        text-align: center;
+    }
+
+    h3 {
+        font-family: noto;
+        color: white;
+        text-align: center;
+    }
+
+    hr {
+        border: 2px solid white;
+    }
+
+    .row-data {
+        background-color: var(--gold);
+        border-radius: 10px;
+        padding: 10px;
+        font-family: noto;
+        color: black;
+
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .row-data h4 {
+        margin: 5px;
+    }
+
+    .contain-record {
+        margin-bottom: 10vh;
+    }
+
+    #back {
+        background-color: var(--black);
+        color: var(--white);
+        text-align: center;
+        padding: 10px 20px;
+        border: 1px solid var(--white);
+        border-radius: 10px;
+        position: sticky;
+        top: 5vw;
+        right: 10vw;
+        display: flex;
+        align-items: center;
+        gap: 8px; /* Added gap between text and image */
+        font-family: roboto, sans-serif;  /* Added fallback for font */
+    }
+
+    #back img {
+        width: 30px;
+        height: 30px;
+    }
+}

@@ -69,11 +69,15 @@ class CGparking {
      * NOTE: this library is only ment for PMS development, this function cannot be use to process any kind of data that is unrelated to PMS
      * @param mixed $DB
      * @param array $array
-     * @return array | bool
+     * @return array | int
      */
     public static function processForm($DB, $array, $switch) {
         switch($switch) {
             // case login
+            // NOTE:
+            // FOR INPUT: input must be contain inside an array before passing it into the second argument
+            // AND
+            // FOR OUTPUT: the data need to be return as array also to avoid further system error & confusion when using the return data
             case "LOGIN":
                 // 1 -> userID, 2 -> passcode, 3 -> regisNum
                 // preparing statement
@@ -100,35 +104,150 @@ class CGparking {
 
                         // return data
                         // list as needed only
+
                         return [
                             'fullname' => $user_D['fullname'],
                             'surname' => $user_D['surname'],
                             'userID' => $user_D['userID'],
                             'gender' => $user_D['gender'],
                             'email' => $user_D['email'],
+                            'licenseID' => $user_D['licenseID'],
                             'licenseType' => $user_D['licenseType'],
                             'dateOfBirth' => $user_D['dateOfBirth'],
                             'phoneNumber' => $user_D['phoneNumber'],
                             'regisNum' => $regis_D['regisNum'],
+                            'vehicleBrand' => $regis_D['vehicleBrand'],
+                            'vehicleModel' => $regis_D['vehicleModel'],
                             'isSuspended' => $regis_D['isSuspended'],
                             'engineHP' => $regis_D['engineHP']
                         ];
                     }
                     // return false if not
                     else {
-                        echo "<script>alert('The entered car registration number doesn\'t exist under the user data');</script>";
-                        return false;
+                        // 2 indicate as registered car number given by the user does not exist
+                        return 2;
                     }
                 }
                 // return false if user not found or not match
                 else {
-                    echo "<script>alert('The given identity number doesn\'t exist in our record');</script>";
-                    return false;
+                    // 1 indicate as identity number given by the user does not exist
+                    return 1;
                 }
-            
+                // code below this comment will mark as unrechable before another case
+                // break;
+            case "REGISTER":
+                /*
+                LIST of given data
+                0.    $userID
+                1.    $fullname
+                2.    $surname -> can be NULL
+                3.    $dateOfBirth
+                4.    $passcode
+                5.    $gender
+                6.    $phoneNumber
+                7.    $email -> can be NULL
+                8.    $licenseID
+                9.    $licenseType
+                10.    $dateOfExpiry
+                11.    $dateLatestRenew
+                */
+
+                $dataInsertion_user_query = "INSERT INTO user (userID, fullname, surname, dateOfBirth, passcode, gender, phoneNumber, email, licenseID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $dataInsertion_license_query = "INSERT INTO license (licenseID, licenseType, dateOfExpiry, dateLatestRenew) VALUES (?, ?, ?, ?)";
+                $licenseCheck_query = "SELECT * FROM license WHERE licenseID = ? AND dateOfExpiry = ?";
+                $userCheck_query = "SELECT * FROM user WHERE userID = ? OR phoneNumber = ?";
+                // do data checking on each tables
+                // 1. license
+                if(
+                    (isset($array[8]) || empty($array[8])) && // licenseID
+                    (isset($array[10]) || empty($array[10])) // dateOfExpiry
+                ) {
+                    // code if licenseID & dateOfExpiry is not empty or NULL
+                    $checklicense = $DB -> prepare($licenseCheck_query);
+                    $checklicense -> bind_param("ss", $array[6], $array[10]);
+                    $checklicense -> execute();
+                    $checklicense_result = $checklicense-> get_result();
+                    
+                    // check if there is any matching row
+                    if($checklicense_result -> num_rows > 0) {
+                        // 1 indicate as licenseID already exist
+                        return 1;
+                    }
+                }
+                else {
+                    // 3 indicate as all related data given is empty or null
+                    return 3;
+                }
+
+                // 2. user
+                if(
+                    (isset($array[0]) || empty($array[0])) && // userID
+                    (isset($array[6]) || empty($array[6])) // phoneNumber
+                ) {
+                    // code if userID & phoneNumber is not empty or NULL
+                    $checkUser = $DB -> prepare($userCheck_query);
+                    $checkUser -> bind_param("ss", $array[0], $array[6]);
+                    $checkUser -> execute();
+                    $checkUser_result = $checkUser -> get_result();
+
+                    // check if there is any matching row
+                    if($checkUser_result -> num_rows > 0) {
+                        // 2 indicate as userID already exist or phoneNumber is already being used
+                        return 2;
+                    }
+                }
+                else {
+                    // 3 indicate as all related data given is empty or null
+                    return 3;
+                }
+
+                // data insertion process
+                // prepare statement
+                $insertInto_license = $DB -> prepare($dataInsertion_license_query); // count 9
+                $insertInto_user = $DB -> prepare($dataInsertion_user_query); // count 4
+
+                // check datatype for the surname
+                $surname = empty($array[2]) || $array[2] === "" ? substr($array[1], 0, 5) : $array[2];
+
+                // bind param
+                $insertInto_license -> bind_param(
+                    "ssss",
+                    $array[8],
+                    $array[9],
+                    $array[10],
+                    $array[11]
+                );
+                $insertInto_user -> bind_param(
+                    "sssssssss",
+                    $array[0],
+                    $array[1],
+                    $surname, // different
+                    $array[3],
+                    $array[4],
+                    $array[5],
+                    $array[6],
+                    $array[7],
+                    $array[8],
+                );
+                
+                // execute license first, then user
+                if($insertInto_license -> execute()) {
+                    if($insertInto_user -> execute()) {
+                        // 0 indicate successful data insertion for both
+                        return [
+                            0,
+                            'surname' => $surname
+                        ];
+                    }
+                }
+
+                // 4 indicate as data insertion fail
+                return 4;
+                // break;
             default:
+                // default action goes here 👇🏻
                 // echo "<script>alert('by default');</script>";
-                return false;
+                return -1;
         }
     }
 
@@ -182,6 +301,7 @@ class CGparking {
         // remember to use `break` after case
         switch($act) {
             case "SET":
+                // usage: <CLASS>::sessionManagment("SET", [name, value]);
                 // loop each args
                 // only 2 indexs array will be in use
                 for($i=0;$i<count($sessionList);$i++) {
@@ -192,6 +312,7 @@ class CGparking {
                 }
                 break;
             case "REMOVE":
+                // usage: <CLASS>::sessionManagment("REMOVE", name);
                 // remove based on name
                 // only string will be accepted inside args
                 // remove each var according to their name
@@ -203,13 +324,14 @@ class CGparking {
                 }
                 break;
             case "ACC":
+                // usage: <CLASS>::sessionManagment("ACC", name);
                 // only access one session at one time
                 // second argument for session name
 
                 if(count($sessionList) === 1 && is_string($sessionList[0])) {
                     if(isset($_SESSION[$sessionList[0]])) {
                         session_write_close();
-                        return true;
+                        return $_SESSION[$sessionList[0]]; // return any value inside the session variable
                     }
                 }
 
@@ -234,5 +356,39 @@ class CGparking {
 
         // return true on success
         return true;
+    }
+
+    /**
+     * Summary of checkValue
+     * @param string $act
+     * @param mixed $arrColumn
+     * @param mixed $arrValue
+     * @param string $table
+     * @param mixed $retColumn
+     * @param mixed $retValue
+     * @return int & array
+     */
+    public static function checkValue($act, $arrColumn, $arrValue, $table, $retColumn, $retValue) {
+        // switch mode smth🤦‍♂️
+        switch($act) {
+            case "SIMPLE":
+                if(
+                    (!is_array($arrColumn)) || 
+                    (!is_array($arrValue)) || 
+                    (!is_array($retColumn)) || 
+                    (!is_array($retValue))
+                ) {
+                    $query = "SELECT $retColumn FROM $table WHERE $arrColumn = $arrValue";
+                }
+                else {
+                    return 1; // argument inserted does not match the use
+                }
+            case "COMPLEX":
+                $columnSelection = "";
+                foreach($arrColumn as $aCol) {
+                    // hit me up later
+                }
+        }
+        return [];
     }
 }

@@ -1,0 +1,159 @@
+:root {
+    --dark: rgb(29, 29, 29);
+    --bright: rgb(255, 255, 255);
+    --highlight: rgb(225, 194, 54);
+}
+
+@import url("import-font.css");
+
+/* body content */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--dark);
+}
+
+/* mobile phone display */
+@media screen and (max-width: 720px) {
+    .header h1 {
+        color: var(--bright);
+        font-family: raleway;
+        text-align: center;
+    }
+    .header h4 {
+        color: var(--bright);
+        font-family: raleway;
+        text-align: center;
+    }
+    .header hr {
+        border: 1px solid white;
+    }
+    .header h3 {
+        font-family: noto;
+        color: var(--highlight);
+        text-align: center;
+    }
+
+    .content,
+    .coupon,
+    .payMenu {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 5px;
+    }
+
+    .coupon {
+        background-color: rgba(163, 163, 73, 0.5);
+        width: 80vw;
+        border-radius: 10px;
+    }
+    .coupon h2 {
+        font-family: noto;
+        text-align: center;
+    }
+
+    .content small {
+        font-family: noto;
+        color: white;
+        text-align: center;
+        width: 80vw;
+    }
+
+    .payMenu h2 {
+        font-family: martian;
+        text-align: center;
+    }
+    .payMenu h4 {
+        font-family: noto;
+        text-align: center;
+        font-style: italic;
+    }
+    .payMenu hr {
+        width: 90%;
+        border: 1px dashed white;
+    }
+    .payMenu div:nth-child(2) {
+        margin: 10px;
+        display: flex;
+        justify-content: center;
+        flex-grow: 1;
+        flex-wrap: wrap;
+    }
+    .payMenu button {
+        background-color: var(--dark);
+        color: var(--highlight);
+        border: none;
+        padding: 10px;
+        font-family: noto;
+        outline: none;
+    }
+    .payMenu input {
+        background-color: var(--dark);
+        color: var(--highlight);
+        border: none;
+        padding: 10px;
+        font-family: noto;
+        text-align: center;
+    }
+    .payMenu button:hover {
+        border-bottom: 1px solid white;
+    }
+
+    .modalOverlay {
+        display: none;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    .recipt {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 85vw;
+        height: fit-content;
+        background-color: var(--bright);
+        color: var(--dark);
+        font-family: noto;
+        padding: 10px;
+    }
+    .recipt #close-recipt {
+        background-color: rgba(198, 196, 196, 0.5);
+        color: red;
+        font-family: noto;
+        font-style: bold;
+        border: 1px solid red;
+        padding-left: 5px;
+        padding-right: 5px;
+        text-align: center;
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+    }
+    .recipt hr {
+        border: 2px black dashed;
+    }
+    .recipt small {
+        text-align: center;
+        color: rgba(166, 166, 166, 0.5);
+        font-family: raleway;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+}
